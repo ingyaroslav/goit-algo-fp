@@ -1,8 +1,5 @@
 import uuid
-import networkx as nx
-
-import matplotlib
-matplotlib.use('GTK3Agg')  # Використання бекенда GTK3Agg
+import networkx as nx  # Додайте цей імпорт
 
 import matplotlib.pyplot as plt
 
@@ -50,17 +47,15 @@ def draw_heap(heap):
         node.id = str(uuid.uuid4())
         heap_tree.add_node(node.id, label=str(val))
 
-        if i == 0:
-            pos[node.id] = (0, -1)
-        elif i % 2 == 0:  # right child
-            pos[node.id] = (pos[heap_tree.nodes()[i // 2]][0] + 1, -1)
-        else:  # left child
-            pos[node.id] = (pos[heap_tree.nodes()[i // 2]][0] - 1, -1)
-
-        parent_id = heap_tree.nodes()[i // 2] if i // 2 < len(heap_tree.nodes()) else None
-        if parent_id:
+        parent_index = (i - 1) // 2
+        if parent_index >= 0:
+            parent_id = heap_tree.nodes()[parent_index]
             heap_tree.add_edge(parent_id, node.id)
 
+        if i % 2 == 0:  # right child
+            pos[node.id] = (pos[heap_tree.nodes()[parent_index]][0] + 0.5, -1)
+        else:  # left child
+            pos[node.id] = (pos[heap_tree.nodes()[parent_index]][0] - 0.5, -1)
 
     colors = ["skyblue"] * len(heap)  # Задаємо всім вузлам колір
     labels = {node[0]: node[1]['label'] for node in heap_tree.nodes(data=True)}
